@@ -305,6 +305,90 @@
       "scope": "仅普通入口"
     },
     {
+      "package": "cmb.pb",
+      "label": "招商银行",
+      "version_code": "1320",
+      "version_name": "13.2.0",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f0802e2",
+          "name": "drawable/common_ic_cmb_logo",
+          "configs": [
+            "xxhdpi"
+          ]
+        }
+      ],
+      "reason": "适配自适应图标",
+      "assets": {
+        "0": "7547c2bc0719ea409775c83e3b8a5f79adffd16c",
+        "1": "a40522bcb9545fc49943694aa2dafcd2679294b3"
+      },
+      "seed_roots": [
+        {
+          "id": "@0x7f080058",
+          "name": "drawable/aboutbank_version_cmb_logo",
+          "configs": [
+            ""
+          ]
+        }
+      ],
+      "mapping_mode": "numeric-idmap-v11",
+      "numeric_target_apk": "split_config.xxhdpi.apk",
+      "numeric_target_crc": "6049bfb8",
+      "bootstrap_artwork": {
+        "file": ".cache/device/cmb.pb/files/res/drawable/aboutbank_version_cmb_logo.webp",
+        "sha256": "1b299f3d3adefd54b9b616af6154990c7ee071d978623a52bdedc71c2f35b22b",
+        "entry": "res/drawable/aboutbank_version_cmb_logo.webp",
+        "config": "",
+        "source_resource": "@0x7f080058",
+        "source_name": "drawable/aboutbank_version_cmb_logo",
+        "apk": "base.apk"
+      }
+    },
+    {
+      "package": "com.autonavi.minimap",
+      "label": "高德地图",
+      "version_code": "170105",
+      "version_name": "17.02.2.2014",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f080e8a",
+          "name": "drawable/v3_icon",
+          "configs": [
+            "xxhdpi"
+          ]
+        }
+      ],
+      "reason": "适配自适应图标",
+      "assets": {
+        "0": "23af1e00d96d9d1592faf698bf1ab3356e5a09f5",
+        "1": "22d22b18f4dacf5f184d15058947651d8da67197"
+      },
+      "seed_roots": [
+        {
+          "id": "@0x7f0800e1",
+          "name": "drawable/auth_logo",
+          "configs": [
+            "xxhdpi"
+          ]
+        }
+      ],
+      "mapping_mode": "numeric-idmap-v11",
+      "numeric_target_apk": "split_config.xxhdpi.apk",
+      "numeric_target_crc": "03774ed9",
+      "bootstrap_artwork": {
+        "file": ".cache/device/com.autonavi.minimap/files/res/drawable-xxhdpi-v4/auth_logo.png",
+        "sha256": "6e9215e4277fc3e655eaee2f838c818791a976f055250f865850c734b43aa305",
+        "entry": "res/drawable-xxhdpi-v4/auth_logo.png",
+        "config": "xxhdpi",
+        "source_resource": "@0x7f0800e1",
+        "source_name": "drawable/auth_logo",
+        "apk": "base.apk"
+      }
+    },
+    {
       "package": "cn.gov.tax.its",
       "label": "个人所得税",
       "version_code": "20305",

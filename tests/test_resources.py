@@ -9,6 +9,7 @@ import unittest
 import zipfile
 
 from build import validate_target
+from cleanicons.artwork import bootstrap_source
 from cleanicons.resources import dump, launcher_icons, resolved_values, resource_table, xml_tree
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -228,6 +229,61 @@ class PddIdlefishArtifactTests(unittest.TestCase):
                 paths = [p for p in archive.namelist() if p.endswith(f"/clean_{layer}.png")]
                 self.assertEqual(len(paths), 1)
                 self.assertEqual(archive.read(paths[0]), (ROOT / ".cache/upstream" / package / f"{number}.png").read_bytes())
+
+
+class SplitLauncherArtifactTests(unittest.TestCase):
+    def setUp(self):
+        self.tools = ROOT / ".cache/toolchain/aapt2"
+        self.apps = {a['package']: a for a in json.loads((ROOT / 'targets.json').read_text())['apps']}
+        self.packages = ['cmb.pb', 'com.autonavi.minimap']
+        if not all((ROOT / 'build/overlays' / p / 'overlay.apk').exists() for p in self.packages):
+            self.skipTest('Build the APKs first')
+
+    def test_actual_launcher_ids_exist_only_in_the_reviewed_density_split(self):
+        for package in self.packages:
+            with self.subTest(package=package):
+                app = self.apps[package]
+                folder = ROOT / '.cache/device' / package
+                base = resource_table(dump(self.tools, folder / 'base.apk', 'resources'))
+                split = resource_table(dump(self.tools, folder / app['numeric_target_apk'], 'resources'))
+                target = app['roots'][0]
+                self.assertNotIn(target['id'], base)
+                self.assertEqual(split[target['id']]['name'], target['name'])
+                refs, _ = launcher_icons(xml_tree(dump(self.tools, folder / 'base.apk', 'xmltree', 'AndroidManifest.xml')))
+                self.assertEqual(refs, [target['id']])
+
+    def test_bootstrap_preserves_original_bytes_density_and_changes_to_the_actual_icon(self):
+        rows = {row.split('\t')[0]: row.split('\t') for row in (ROOT / 'build/module/numeric-targets.tsv').read_text().splitlines()}
+        for package in self.packages:
+            with self.subTest(package=package):
+                app = self.apps[package]
+                apk = ROOT / 'build/overlays' / package / 'overlay.apk'
+                table = resource_table(dump(self.tools, apk, 'resources'))
+                seed_id, seed = next((rid, r) for rid, r in table.items() if r['name'] == 'drawable/clean_seed')
+                icon_id, icon = next((rid, r) for rid, r in table.items() if r['name'] == 'drawable/clean_icon')
+                self.assertEqual([v['config'] for v in seed['values']], app['seed_roots'][0]['configs'])
+                self.assertIn('xxhdpi-v26', {v['config'] for v in icon['values']})
+                mapping = xml_tree(dump(self.tools, apk, 'xmltree', 'res/xml/overlays.xml'))
+                items = [n for n in mapping.walk() if n.tag == 'item']
+                self.assertEqual([(n.attrs['target'], n.attrs['value']) for n in items],
+                                 [(app['seed_roots'][0]['name'], seed_id)])
+                with zipfile.ZipFile(apk) as archive:
+                    original = bootstrap_source(ROOT, app)
+                    copies = [p for p in archive.namelist() if p.endswith('/clean_seed' + original.suffix)]
+                    self.assertEqual(len(copies), 1)
+                    self.assertEqual(archive.read(copies[0]), original.read_bytes())
+                row = rows[package]
+                self.assertEqual(len(row), 8)
+                self.assertEqual(row[3:], [app['seed_roots'][0]['id'][1:], app['roots'][0]['id'][1:],
+                                         app['numeric_target_crc'], seed_id[1:], icon_id[1:]])
+                self.assertNotEqual(seed_id, icon_id)
+
+    def test_changed_bootstrap_bytes_path_or_configuration_are_rejected(self):
+        for fields in [{'sha256': '0' * 64}, {'file': '../outside.webp'}, {'config': 'hdpi'}]:
+            app = copy.deepcopy(self.apps['cmb.pb'])
+            app['bootstrap_artwork'].update(fields)
+            with self.subTest(fields=fields), self.assertRaises(ValueError):
+                bootstrap_source(ROOT, app)
 
 
 class RuntimeCheckerTests(unittest.TestCase):

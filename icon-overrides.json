@@ -7,5 +7,13 @@
     "roots": ["drawable/appicon_skin_default_badge"],
     "numeric_target": {"id": "@0x7f0807a6", "name": "drawable/idlefish_ic_launcher", "apk": "split_config.xxhdpi.apk"},
     "scope": "仅普通入口"
+  },
+  "cmb.pb": {
+    "bootstrap_resource": {"id": "@0x7f080058", "name": "drawable/aboutbank_version_cmb_logo"},
+    "numeric_target": {"id": "@0x7f0802e2", "name": "drawable/common_ic_cmb_logo", "apk": "split_config.xxhdpi.apk"}
+  },
+  "com.autonavi.minimap": {
+    "bootstrap_resource": {"id": "@0x7f0800e1", "name": "drawable/auth_logo"},
+    "numeric_target": {"id": "@0x7f080e8a", "name": "drawable/v3_icon", "apk": "split_config.xxhdpi.apk"}
   }
 }

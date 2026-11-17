@@ -14,7 +14,10 @@ public final class NumericIcons {
         byte[] bytes;
         int targetOffset;
         int reverseOffset;
+        int overlayOffset;
+        int reverseOverlayOffset;
         int target;
+        int overlay;
     }
 
     private static void require(boolean condition, String message) {
@@ -46,7 +49,9 @@ public final class NumericIcons {
         }
     }
 
-    private static Mapping read(String path, int seed, int target, String base, String overlay, String expectedCrc) throws Exception {
+    private static Mapping read(String path, int seed, int target, String base, String overlay, String expectedCrc,
+                                int seedOverlay, int targetOverlay) throws Exception {
+        require((seedOverlay >>> 24) == 0x7f && (targetOverlay >>> 24) == 0x7f, "Invalid reviewed overlay IDs");
         File file = new File(path);
         require(file.isFile() && file.length() >= 64 && file.length() <= 1048576, "Invalid idmap file size");
         Mapping result = new Mapping();
@@ -69,11 +74,14 @@ public final class NumericIcons {
         require(word(data) >= 0, "Invalid string pool index");
         result.targetOffset = data.position();
         result.target = word(data);
-        int overlayId = word(data);
-        require(word(data) == overlayId && (overlayId >>> 24) == 0x7f, "Invalid reverse mapping");
+        result.overlayOffset = data.position();
+        result.overlay = word(data);
+        result.reverseOverlayOffset = data.position();
+        require(word(data) == result.overlay, "Invalid reverse mapping");
         result.reverseOffset = data.position();
         require(word(data) == result.target, "Forward and reverse targets differ");
-        require(result.target == seed || result.target == target, "Unexpected target resource ID");
+        require((result.target == seed && result.overlay == seedOverlay) ||
+                (result.target == target && result.overlay == targetOverlay), "Unexpected resource ID pair");
         int poolLength = word(data);
         require(poolLength >= 0 && poolLength == data.remaining(), "Invalid string pool bounds");
         return result;
@@ -120,24 +128,30 @@ public final class NumericIcons {
 
     public static void main(String[] args) {
         try {
-            require(args.length >= 7, "Invalid helper arguments");
+            require(args.length >= 9, "Invalid helper arguments");
             if (args[0].equals("patch")) {
-                require(args.length == 8, "Invalid patch arguments");
+                require(args.length == 10, "Invalid patch arguments");
                 int seed = Integer.decode(args[3]);
                 int target = Integer.decode(args[4]);
-                Mapping mapping = read(args[1], seed, target, args[5], args[6], args[7]);
+                int seedOverlay = Integer.decode(args[8]);
+                int targetOverlay = Integer.decode(args[9]);
+                Mapping mapping = read(args[1], seed, target, args[5], args[6], args[7], seedOverlay, targetOverlay);
                 ByteBuffer data = ByteBuffer.wrap(mapping.bytes).order(ByteOrder.LITTLE_ENDIAN);
                 data.putInt(mapping.targetOffset, target);
                 data.putInt(mapping.reverseOffset, target);
+                data.putInt(mapping.overlayOffset, targetOverlay);
+                data.putInt(mapping.reverseOverlayOffset, targetOverlay);
                 Files.write(new File(args[2]).toPath(), mapping.bytes);
-                read(args[2], seed, target, args[5], args[6], args[7]);
+                read(args[2], seed, target, args[5], args[6], args[7], seedOverlay, targetOverlay);
                 System.out.println("Mapping prepared for " + args[4]);
             } else if (args[0].equals("check")) {
                 int seed = Integer.decode(args[2]);
                 int target = Integer.decode(args[3]);
-                Mapping mapping = read(args[1], seed, target, args[4], args[5], args[6]);
-                require(mapping.target == target, "Launcher resource ID is not mapped");
-                checkResource(args[1], target, args[4], args[5], args, 7);
+                int seedOverlay = Integer.decode(args[7]);
+                int targetOverlay = Integer.decode(args[8]);
+                Mapping mapping = read(args[1], seed, target, args[4], args[5], args[6], seedOverlay, targetOverlay);
+                require(mapping.target == target && mapping.overlay == targetOverlay, "Launcher resource ID is not mapped");
+                checkResource(args[1], target, args[4], args[5], args, 9);
                 System.out.println("Selected adaptive icon for " + args[3]);
             } else {
                 throw new IllegalArgumentException("Unknown helper operation");

@@ -78,7 +78,7 @@ class WebPackageTests(unittest.TestCase):
                 self.assertNotIn("scope", app)
             self.assertNotIn("notes", catalog)
             for package in ["cmb.pb", "com.autonavi.minimap"]:
-                self.assertNotIn(package, {a["package"] for a in catalog["apps"]})
+                self.assertIn(package, {a["package"] for a in catalog["apps"]})
             for name in ["webroot/vendor/kernelsu.js", "webroot/vendor/LICENSE-Apache-2.0.txt", "ui.sh"]:
                 self.assertIn(name, archive.namelist())
             pdd = next(a for a in catalog["apps"] if a["package"] == "com.xunmeng.pinduoduo")

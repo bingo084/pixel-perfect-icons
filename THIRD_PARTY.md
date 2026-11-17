@@ -15,6 +15,10 @@
 
 拼多多的“原图”对照在安装时从手机已安装的 APK 读取，仅存入模块自身的预览图片，不更改原应用。
 
+## 招行及高德的初始映射
+
+0.3.9 从匹配版本的已安装 APK 只读提取 `aboutbank_version_cmb_logo.webp`（招商银行）和 `auth_logo.png`（高德地图），作为初始映射的原样副本，保持字节和密度配置，避免初始映射误改应用内部图片。校准后最终桌面图标仍使用补全计划默认分层素材。这两张原图的资源、版本和 SHA256 见 `targets.json` 的 `bootstrap_artwork`；素材权利仍归原作者和相应权利人所有。
+
 ## KernelSU JavaScript SDK
 
 WebUI 使用官方 npm 包 `kernelsu@3.3.0` 的原始 `index.js`，声明的许可证为 Apache-2.0。

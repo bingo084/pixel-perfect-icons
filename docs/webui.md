@@ -44,4 +44,4 @@
 
 `npm test` 运行 Node 内置测试，不需要安装前端依赖。可选 DOM 交互测试通过 `HAPPY_DOM_MODULE=<happy-dom 的绝对模块路径> node tests/dom.mjs` 运行；可选浏览器测试通过 `PLAYWRIGHT_MODULE=<playwright 的绝对模块路径> node tests/browser.mjs` 运行。
 
-当前环境完成了 DOM 交互验证及本机 headless Chrome 的离线预览截图，覆盖初始、等待及完成状态。预览使用模拟接口，不能代替 KernelSU WebView 真机验证。0.3.6 已通过 KernelSU 安装，重启命令成功返回；当前 0.3.8 尚未安装。
+0.3.9 的“已替换”列表增加招商银行和高德地图，两项都显示“适配自适应图标 · 补全计划”及前后图片。当前环境完成了 DOM 交互验证；0.3.8 另有本机 headless Chrome 离线预览截图，覆盖初始、等待及完成状态。预览使用模拟接口，不能代替 KernelSU WebView 真机验证。0.3.6 已通过 KernelSU 安装，重启命令成功返回；当前 0.3.9 尚未安装。

@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# Maintain only this module's two reviewed idmaps. Never changes application APKs.
+# Maintain only this module's reviewed idmaps. Never changes application APKs.
 exec 2>&1
 MODDIR=${0%/*}
 MODE=${1:-check}
@@ -17,10 +17,10 @@ helper() {
 }
 
 one() (
-    package=$1 expected=$2 overlay=$3 seed=$4 target=$5 crc=$6
+    package=$1 expected=$2 overlay=$3 seed=$4 target=$5 crc=$6 seed_overlay=$7 target_overlay=$8
     printf '%s\n' "$package" | grep -Eq '^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z0-9_]+)+$' || exit 2
     [ "$overlay" = "local.pixelcleanicons.$(printf '%s' "$package" | tr '[:upper:].' '[:lower:]_')" ] || exit 2
-    for resource in "$seed" "$target"; do
+    for resource in "$seed" "$target" "$seed_overlay" "$target_overlay"; do
         printf '%s\n' "$resource" | grep -Eq '^0x7f[0-9a-f]{6}$' || exit 2
     done
     printf '%s\n' "$crc" | grep -Eq '^[0-9a-f]{8}$' || exit 2
@@ -36,14 +36,14 @@ one() (
     idmap="/data/resource-cache/system_ext@overlay@$overlay.apk@idmap"
     overlay_apk="/system_ext/overlay/$overlay.apk"
     [ -f "$idmap" ] && [ ! -L "$idmap" ] && [ -f "$overlay_apk" ] || exit 2
-    set -- "$idmap" "$seed" "$target" "$base" "$overlay_apk" "$crc"
+    set -- "$idmap" "$seed" "$target" "$base" "$overlay_apk" "$crc" "$seed_overlay" "$target_overlay"
     for line in $paths; do
         path=${line#package:}
         case "$path" in /data/app/*/split_*.apk) set -- "$@" "$path" ;; esac
     done
     if [ "$MODE" = check ]; then
         current=$(cmd package resolve-activity --user 0 -a android.intent.action.MAIN -c android.intent.category.LAUNCHER "$package" |
-            sed -n 's/.* icon=\(0x[0-9a-fA-F]*\) .*/\1/p' | head -n 1 | tr '[:upper:]' '[:lower:]')
+            sed -n 's/.* icon=\(0x[0-9a-fA-F]*\) .*/\1/p' | tr '[:upper:]' '[:lower:]' | grep -Ev '^0x0+$' | head -n 1)
         [ "$current" = "$target" ] || { echo "Launcher entry is not covered: $package ($current)"; exit 1; }
         helper check "$@"
         exit $?
@@ -61,7 +61,7 @@ one() (
     temporary=$(mktemp "/data/resource-cache/.pixel-clean-icons-map-$overlay.XXXXXX") || exit 1
     trap 'rm -f "$temporary"' 0
     cp -p "$idmap" "$temporary" || exit 1
-    helper patch "$idmap" "$temporary" "$seed" "$target" "$base" "$overlay_apk" "$crc" || exit 1
+    helper patch "$idmap" "$temporary" "$seed" "$target" "$base" "$overlay_apk" "$crc" "$seed_overlay" "$target_overlay" || exit 1
     context=$(ls -Zd "$idmap") || exit 1
     context=${context%% *}
     case "$context" in u:object_r:*:s0) ;; *) echo 'Unexpected idmap context'; exit 1 ;; esac
@@ -75,7 +75,7 @@ one() (
 
 process() {
     failed=0 found=false
-    while IFS="$TAB" read -r package expected overlay seed target crc extra; do
+    while IFS="$TAB" read -r package expected overlay seed target crc seed_overlay target_overlay extra; do
         [ -n "$package" ] || continue
         [ -z "$REQUESTED" ] || [ "$package" = "$REQUESTED" ] || continue
         found=true
@@ -83,7 +83,7 @@ process() {
             failed=2
             continue
         fi
-        one "$package" "$expected" "$overlay" "$seed" "$target" "$crc"
+        one "$package" "$expected" "$overlay" "$seed" "$target" "$crc" "$seed_overlay" "$target_overlay"
         code=$?
         if [ "$code" -eq 2 ]; then failed=2
         elif [ "$code" -ne 0 ] && [ "$failed" -eq 0 ]; then failed=1

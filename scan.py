@@ -78,6 +78,23 @@ def inspect(package, aapt2, cache):
             overlayable = dump(aapt2, local, "overlayable")
     if base_tree is None:
         raise RuntimeError("base.apk missing")
+    # A non-launcher bootstrap must initially render exactly its original bitmap.
+    # Fetch only the explicitly reviewed base resource; never pick a random image.
+    overrides = json.loads((ROOT / "icon-overrides.json").read_text())
+    if bootstrap := overrides.get(package, {}).get("bootstrap_resource"):
+        entry = table[bootstrap["id"]]
+        if entry["name"] != bootstrap["name"] or len(entry["values"]) != 1:
+            raise ValueError("Bootstrap resource changed; review it again: " + package)
+        value = entry["values"][0]
+        files = list(file_values(entry))
+        if not value["apk"].endswith("/base.apk") or len(files) != 1:
+            raise ValueError("Bootstrap requires one direct base bitmap: " + package)
+        _, filename = files[0]
+        if not re.fullmatch(r"res/[A-Za-z0-9_/-]+\.(png|webp)", filename):
+            raise ValueError("Unsupported bootstrap image: " + filename)
+        dest = folder / "files" / filename
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(read_entry(value["apk"], filename))
     refs, components = launcher_icons(base_tree)
     reference_lookup = alias_reader([folder / Path(p).name for p in selected])
     manifest = next(n for n in base_tree.walk() if n.tag == "manifest")

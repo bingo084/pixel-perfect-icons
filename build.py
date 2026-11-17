@@ -15,12 +15,12 @@ import zipfile
 
 from cleanicons.resources import dump, resource_table, xml_tree
 from cleanicons.webui import build_webui
-from cleanicons.artwork import bitmap_background, bitmap_source
+from cleanicons.artwork import bitmap_background, bitmap_source, bootstrap_source
 
 ROOT = Path(__file__).resolve().parent
 ANDROID = "http://schemas.android.com/apk/res/android"
-VERSION = "0.3.8"
-VERSION_CODE = 308
+VERSION = "0.3.9"
+VERSION_CODE = 309
 # Keep the installed identity so renamed releases update the existing module.
 MODULE_ID = "pixel-clean-icons"
 ARCHIVE_NAME = "pixel-perfect-icons"
@@ -160,9 +160,20 @@ def build_overlay(app, target, tools, framework, key, env):
             adaptive_configs.add(config)
         for config in sorted(adaptive_configs):
             write_xml(target / ("res/drawable-" + config) / "clean_icon.xml", adaptive)
+    mapping_value = "@drawable/clean_icon"
+    if seed_bitmap := bootstrap_source(ROOT, app):
+        config = app["bootstrap_artwork"]["config"]
+        if config and not re.fullmatch(r"[A-Za-z0-9+_-]+", config):
+            raise ValueError("Unexpected bootstrap configuration")
+        folder = target / ("res/drawable" + ("-" + config if config else ""))
+        folder.mkdir(parents=True, exist_ok=True)
+        name = "clean_seed" + seed_bitmap.suffix
+        shutil.copy2(seed_bitmap, folder / name)
+        expected_images[name] = seed_bitmap.read_bytes()
+        mapping_value = "@drawable/clean_seed"
     mapping = ET.Element("overlay")
     for entry in mapping_roots:
-        ET.SubElement(mapping, "item", {"target": entry["name"], "value": "@drawable/clean_icon"})
+        ET.SubElement(mapping, "item", {"target": entry["name"], "value": mapping_value})
     write_xml(target / "res/xml/overlays.xml", mapping)
     compiled = target / "compiled.zip"
     run(tools / "aapt2", "compile", "--no-crunch", "--dir", target / "res", "-o", compiled)
@@ -235,8 +246,13 @@ def main():
         if app.get("mapping_mode") == "numeric-idmap-v11":
             if len(app["roots"]) != 1 or len(app["seed_roots"]) != 1:
                 raise ValueError("Numeric mappings require one seed and one target")
+            table = resource_table(dump(args.tools / "aapt2", apk, "resources"))
+            seed_name = "drawable/clean_seed" if app.get("bootstrap_artwork") else "drawable/clean_icon"
+            seed_id = next(rid[1:] for rid, value in table.items() if value["name"] == seed_name)
+            icon_id = next(rid[1:] for rid, value in table.items() if value["name"] == "drawable/clean_icon")
             numeric.append("\t".join([app["package"], app["version_code"], overlay_id,
-                                      app["seed_roots"][0]["id"][1:], app["roots"][0]["id"][1:], app["numeric_target_crc"]]))
+                                      app["seed_roots"][0]["id"][1:], app["roots"][0]["id"][1:],
+                                      app["numeric_target_crc"], seed_id, icon_id]))
         if plan := app.get("original_preview"):
             if not re.fullmatch(r"(?:base|split_config\.[A-Za-z0-9_.-]+)\.apk", plan["apk"]):
                 raise ValueError("Unsafe original preview APK")

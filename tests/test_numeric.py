@@ -25,6 +25,8 @@ class NumericMapTests(unittest.TestCase):
                 z.writestr("resources.arsc", b"metadata")
         self.seed = 0x7f070570
         self.target = 0x7f0d0009
+        self.seed_overlay = 0x7f010004
+        self.target_overlay = self.seed_overlay
 
     @staticmethod
     def string(text):
@@ -42,7 +44,7 @@ class NumericMapTests(unittest.TestCase):
         self.counts = len(data) + 4
         data += struct.pack("<7I", 0, 1, 0, 0, 0, 1, 7)
         self.entries = len(data)
-        data += struct.pack("<5I", self.seed, 0x7f010004, 0x7f010004, self.seed, 4) + b"pool"
+        data += struct.pack("<5I", self.seed, self.seed_overlay, self.seed_overlay, self.seed, 4) + b"pool"
         return data
 
     def patch(self, data):
@@ -51,7 +53,8 @@ class NumericMapTests(unittest.TestCase):
         if dest.exists():
             dest.unlink()
         result = subprocess.run(["java", "-cp", str(self.classes), "NumericIcons", "patch", str(source), str(dest),
-                                 hex(self.seed), hex(self.target), str(self.base), str(self.overlay), f'{self.crc(self.base):08x}'], capture_output=True, text=True)
+                                 hex(self.seed), hex(self.target), str(self.base), str(self.overlay), f'{self.crc(self.base):08x}',
+                                 hex(self.seed_overlay), hex(self.target_overlay)], capture_output=True, text=True)
         self.assertEqual(source.read_bytes(), data)
         return result, dest
 
@@ -67,6 +70,25 @@ class NumericMapTests(unittest.TestCase):
         result, dest = self.patch(patched)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(dest.read_bytes(), patched)
+
+    def test_preserved_bootstrap_changes_both_resource_pairs_and_reapplication_is_idempotent(self):
+        self.target_overlay = 0x7f010002
+        original = self.mapping()
+        result, dest = self.patch(original)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        expected = bytearray(original)
+        struct.pack_into('<4I', expected, self.entries, self.target, self.target_overlay, self.target_overlay, self.target)
+        self.assertEqual(dest.read_bytes(), expected)
+        result, dest = self.patch(bytes(expected))
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(dest.read_bytes(), expected)
+        # A half-updated pair must not be accepted as a reviewed initial/final state.
+        for target, overlay in [(self.seed, self.target_overlay), (self.target, self.seed_overlay)]:
+            mixed = bytearray(original)
+            struct.pack_into('<4I', mixed, self.entries, target, overlay, overlay, target)
+            result, dest = self.patch(mixed)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertFalse(dest.exists())
 
     def test_changed_headers_paths_crcs_entries_and_bounds_fail_before_output(self):
         original = self.mapping()
@@ -95,7 +117,8 @@ class NumericMapTests(unittest.TestCase):
         source, dest = self.folder / 'different.idmap', self.folder / 'new.idmap'
         source.write_bytes(changed)
         result = subprocess.run(['java', '-cp', str(self.classes), 'NumericIcons', 'patch', str(source), str(dest),
-                                 hex(self.seed), hex(self.target), str(self.base), str(self.overlay), pinned], capture_output=True, text=True)
+                                 hex(self.seed), hex(self.target), str(self.base), str(self.overlay), pinned,
+                                 hex(self.seed_overlay), hex(self.target_overlay)], capture_output=True, text=True)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('reviewed scan', result.stderr)
         self.assertFalse(dest.exists())

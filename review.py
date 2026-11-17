@@ -66,6 +66,25 @@ def main():
             original_preview = {"apk": value["apk"], "entry": path, "config": config, "source_resource": rid,
                                 "resolved_resource": alias_reader(apks)(rid)}
         roots = []
+        bootstrap_artwork = None
+        if bootstrap := override.get("bootstrap_resource"):
+            if not override.get("numeric_target") or override.get("roots"):
+                raise ValueError("Preserved bootstrap requires a numeric target without launcher seeds: " + package)
+            resource = table[bootstrap["id"]]
+            values = resource["values"]
+            files = list(file_values(resource))
+            if (resource["name"] != bootstrap["name"] or len(values) != 1 or
+                    values[0]["apk"] != "base.apk" or len(files) != 1):
+                raise ValueError("Bootstrap must be one direct base bitmap: " + package)
+            config, path = files[0]
+            if not re.fullmatch(r"res/[A-Za-z0-9_/-]+\.(png|webp)", path):
+                raise ValueError("Unsupported bootstrap image: " + path)
+            file = folder / "files" / path
+            content = file.read_bytes()
+            bootstrap_artwork = {"file": str(file.relative_to(ROOT)), "sha256": hashlib.sha256(content).hexdigest(),
+                                 "entry": path, "config": config, "source_resource": bootstrap["id"],
+                                 "source_name": bootstrap["name"], "apk": "base.apk"}
+            selected_roots = [{"id": bootstrap["id"], "name": bootstrap["name"]}]
         for r in selected_roots:
             if r["id"] not in base_ids:
                 raise ValueError("RRO target is absent from base.apk: " + package + ':' + r["name"])
@@ -89,6 +108,8 @@ def main():
                 reviewed["numeric_target_crc"] = f'{base.getinfo("AndroidManifest.xml").CRC ^ base.getinfo("resources.arsc").CRC:08x}'
         if original_preview:
             reviewed["original_preview"] = original_preview
+        if bootstrap_artwork:
+            reviewed["bootstrap_artwork"] = bootstrap_artwork
         if source_name := override.get("artwork_resource"):
             source_ids = [rid for rid, resource in table.items() if resource["name"] == source_name]
             if len(source_ids) != 1:
