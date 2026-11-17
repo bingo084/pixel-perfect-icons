@@ -15,5 +15,9 @@
   "com.autonavi.minimap": {
     "bootstrap_resource": {"id": "@0x7f0800e1", "name": "drawable/auth_logo"},
     "numeric_target": {"id": "@0x7f080e8a", "name": "drawable/v3_icon", "apk": "split_config.xxhdpi.apk"}
+  },
+  "com.tencent.mobileqq": {
+    "resource_reader": "binary-bitmaps",
+    "roots": ["drawable/icon"]
   }
 }

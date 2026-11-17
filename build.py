@@ -19,8 +19,8 @@ from cleanicons.artwork import bitmap_background, bitmap_source, bootstrap_sourc
 
 ROOT = Path(__file__).resolve().parent
 ANDROID = "http://schemas.android.com/apk/res/android"
-VERSION = "0.3.9"
-VERSION_CODE = 309
+VERSION = "0.3.10"
+VERSION_CODE = 310
 # Keep the installed identity so renamed releases update the existing module.
 MODULE_ID = "pixel-clean-icons"
 ARCHIVE_NAME = "pixel-perfect-icons"

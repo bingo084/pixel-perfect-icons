@@ -31,7 +31,7 @@ try {
   await page.getByRole('tab', { name: /^未替换/ }).click();
   assert.ok(await page.locator('.untouched-row').count() > 0);
   assert.equal(await page.locator('.untouched-row .icon-empty').count(), await page.locator('.untouched-row').count());
-  await page.getByRole('searchbox').fill('QQ');
+  await page.getByRole('searchbox').fill('网易云');
   assert.equal(await page.locator('.app-row').count(), 1);
   assert.equal(await page.locator('.reason-button').count(), 0);
   await page.getByRole('searchbox').fill('not-an-installed-app');

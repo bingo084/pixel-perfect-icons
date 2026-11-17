@@ -389,6 +389,27 @@
       }
     },
     {
+      "package": "com.tencent.mobileqq",
+      "label": "QQ",
+      "version_code": "16580",
+      "version_name": "9.3.75",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f081e92",
+          "name": "drawable/icon",
+          "configs": [
+            "xxhdpi"
+          ]
+        }
+      ],
+      "reason": "适配自适应图标",
+      "assets": {
+        "0": "36b0a07054311f5608f31e1adb6c1feac1aaf4f5",
+        "1": "7dcf20ba4bbce56a722808d48312bb1b5e3732e3"
+      }
+    },
+    {
       "package": "cn.gov.tax.its",
       "label": "个人所得税",
       "version_code": "20305",

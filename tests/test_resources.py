@@ -286,6 +286,31 @@ class SplitLauncherArtifactTests(unittest.TestCase):
                 bootstrap_source(ROOT, app)
 
 
+class QQArtifactTests(unittest.TestCase):
+    def test_ordinary_icon_uses_a_normal_named_overlay_with_adaptive_layers(self):
+        tools = ROOT / '.cache/toolchain/aapt2'
+        apk = ROOT / 'build/overlays/com.tencent.mobileqq/overlay.apk'
+        if not apk.exists():
+            self.skipTest('Build the APKs first')
+        apps = json.loads((ROOT / 'targets.json').read_text())['apps']
+        app = next(a for a in apps if a['package'] == 'com.tencent.mobileqq')
+        self.assertNotIn('mapping_mode', app)
+        self.assertEqual(app['roots'], [{'id': '@0x7f081e92', 'name': 'drawable/icon', 'configs': ['xxhdpi']}])
+        self.assertNotIn('com.tencent.mobileqq', (ROOT / 'build/module/numeric-targets.tsv').read_text())
+        mapping = xml_tree(dump(tools, apk, 'xmltree', 'res/xml/overlays.xml'))
+        self.assertEqual([n.attrs['target'] for n in mapping.walk() if n.tag == 'item'], ['drawable/icon'])
+        table = resource_table(dump(tools, apk, 'resources'))
+        icon = next(r for r in table.values() if r['name'] == 'drawable/clean_icon')
+        self.assertTrue({'v26', 'xxhdpi-v26'}.issubset({v['config'] for v in icon['values']}))
+        with zipfile.ZipFile(apk) as archive:
+            for number, layer in [(0, 'background'), (1, 'foreground')]:
+                path = next(p for p in archive.namelist() if p.endswith('/clean_' + layer + '.png'))
+                self.assertEqual(archive.read(path), (ROOT / '.cache/upstream/com.tencent.mobileqq' / f'{number}.png').read_bytes())
+        scanned = next(a for a in json.loads((ROOT / '.cache/inventory.json').read_text())['apps'] if a['package'] == app['package'])
+        self.assertEqual(scanned['primary_icon_id'], app['roots'][0]['id'])
+        self.assertEqual(scanned['roots'][0]['variants'][0]['path'], 'r/b/icon.png')
+
+
 class RuntimeCheckerTests(unittest.TestCase):
     def run_checker(self, value, mode=None, state="STATE_ENABLED", dump_exit=0, lookup_exit=0, mapping=True):
         with tempfile.TemporaryDirectory() as tmp:

@@ -17,6 +17,7 @@ import zipfile
 
 from cleanicons.resources import dump, file_values, launcher_icons, resolved_values, resource_table, xml_tree
 from cleanicons.arsc import alias_reader
+from cleanicons.bitmap_table import bitmap_resource_table
 
 ROOT = Path(__file__).resolve().parent
 REPO = "pzcn/Perfect-Icons-Completion-Project"
@@ -52,6 +53,8 @@ def inspect(package, aapt2, cache):
     selected = [s for s in paths if s.endswith("/base.apk") or re.search(r"/split_config\.[a-z]*dpi\.apk$", s)]
     table = {}
     base_tree = None
+    override = json.loads((ROOT / "icon-overrides.json").read_text()).get(package, {})
+    binary_refs = None
     for remote in selected:
         local = folder / Path(remote).name
         stamp = local.with_suffix(".source")
@@ -64,7 +67,16 @@ def inspect(package, aapt2, cache):
                         if name == "AndroidManifest.xml":
                             raise
             stamp.write_text(remote)
-        parsed = resource_table(dump(aapt2, local, "resources"))
+        if remote.endswith("/base.apk"):
+            base_tree = xml_tree(dump(aapt2, local, "xmltree", "AndroidManifest.xml"))
+            binary_refs, _ = launcher_icons(base_tree)
+        if override.get("resource_reader") == "binary-bitmaps":
+            if binary_refs is None:
+                raise ValueError("Read the base manifest before bitmap splits")
+            with zipfile.ZipFile(local) as archive:
+                parsed = bitmap_resource_table(archive.read("resources.arsc"), binary_refs)
+        else:
+            parsed = resource_table(dump(aapt2, local, "resources"))
         for rid, entry in parsed.items():
             for value in entry["values"]:
                 value["apk"] = remote
@@ -73,7 +85,6 @@ def inspect(package, aapt2, cache):
             else:
                 table[rid] = entry
         if remote.endswith("/base.apk"):
-            base_tree = xml_tree(dump(aapt2, local, "xmltree", "AndroidManifest.xml"))
             badging = dump(aapt2, local, "badging")
             overlayable = dump(aapt2, local, "overlayable")
     if base_tree is None:

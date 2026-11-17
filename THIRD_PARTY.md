@@ -19,6 +19,10 @@
 
 0.3.9 从匹配版本的已安装 APK 只读提取 `aboutbank_version_cmb_logo.webp`（招商银行）和 `auth_logo.png`（高德地图），作为初始映射的原样副本，保持字节和密度配置，避免初始映射误改应用内部图片。校准后最终桌面图标仍使用补全计划默认分层素材。这两张原图的资源、版本和 SHA256 见 `targets.json` 的 `bootstrap_artwork`；素材权利仍归原作者和相应权利人所有。
 
+## QQ 普通图标
+
+0.3.10 使用补全计划 `icons/com.tencent.mobileqq/0.png`、`1.png`，保留经典企鹅和红围巾。固定提交中两张图片的 Git blob SHA 分别为 `36b0a07054311f5608f31e1adb6c1feac1aaf4f5`、`7dcf20ba4bbce56a722808d48312bb1b5e3732e3`，构建保持原始 PNG 字节。前后对照的原图从匹配版本 QQ 的 `r/b/icon.png` 只读提取，不进入公开源码。
+
 ## KernelSU JavaScript SDK
 
 WebUI 使用官方 npm 包 `kernelsu@3.3.0` 的原始 `index.js`，声明的许可证为 Apache-2.0。

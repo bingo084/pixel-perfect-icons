@@ -9,6 +9,7 @@ import hashlib
 import zipfile
 
 from cleanicons.arsc import alias_reader
+from cleanicons.bitmap_table import bitmap_resource_table
 from cleanicons.resources import dump, file_values, resolved_values, resource_table
 
 ROOT = Path(__file__).resolve().parent
@@ -28,8 +29,13 @@ def main():
         table = {}
         apks = [p for p in sorted(folder.glob("*.apk")) if p.name != "metadata.apk"]
         base_ids = set()
+        override = overrides.get(package, {})
         for apk in apks:
-            apk_table = resource_table(dump(ROOT / ".cache/toolchain/aapt2", apk, "resources"))
+            if override.get("resource_reader") == "binary-bitmaps":
+                with zipfile.ZipFile(apk) as archive:
+                    apk_table = bitmap_resource_table(archive.read("resources.arsc"), [r["id"] for r in app["roots"]])
+            else:
+                apk_table = resource_table(dump(ROOT / ".cache/toolchain/aapt2", apk, "resources"))
             if apk.name == "base.apk":
                 base_ids = set(apk_table)
             for rid, entry in apk_table.items():
@@ -40,7 +46,6 @@ def main():
                 else:
                     table[rid] = entry
         names = Counter(r["name"] for r in table.values())
-        override = overrides.get(package, {})
         selected_roots = app["roots"]
         if requested := override.get("roots"):
             selected_roots = [r for r in app["roots"] if r["name"] in requested]

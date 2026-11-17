@@ -51,7 +51,7 @@ try {
   assert.equal(document.querySelectorAll('.app-row').length, 1);
   assert.equal($('.app-reason').textContent, '适配自适应图标 · 补全计划');
   assert.equal(document.querySelectorAll('.comparison > .icon img').length, 2);
-  for (const name of ['招商银行', '高德地图']) {
+  for (const name of ['招商银行', '高德地图', 'QQ']) {
     search(name);
     assert.equal(document.querySelectorAll('.app-row').length, 1);
     assert.equal($('.app-reason').textContent, '适配自适应图标 · 补全计划');
@@ -69,7 +69,7 @@ try {
     assert.equal(row.querySelector('.status').textContent, '未替换');
     assert.equal(row.querySelector('.app-reason'), null);
   }
-  search('QQ');
+  search('网易云');
   assert.equal(document.querySelectorAll('.app-row').length, 1);
   assert.equal(document.querySelectorAll('.reason-button').length, 0);
   search('not-an-installed-app');
@@ -188,6 +188,7 @@ await fs.writeFile(path.join(root, 'build/ui-preview/dom-results.json'), JSON.st
   default_replaced: expectedReplaced, preview_apps: expectedAll, netdisk_comparison: 'passed', search_filters: 'passed', keyboard_tabs: 'passed',
   pdd_comparison: 'passed', idlefish_comparison: 'passed',
   cmb_amap_comparisons: 'passed',
+  qq_comparison: 'passed',
   icon_sources_without_scope_labels: 'passed',
   unified_row_structure: 'passed', untouched_replacement_slot: 'dash_not_duplicate_icon',
   unadapted_apps_have_no_explanation: true, explanation_only_for_failed_replacements: 'passed',
