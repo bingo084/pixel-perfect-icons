@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 import re
 import subprocess
-from cleanicons.artwork import bitmap_background, bitmap_source
+from cleanicons.artwork import bitmap_background, bitmap_source, foreground_scale
 
 ROOT = Path(__file__).resolve().parent
 FONT = subprocess.check_output(["fc-match", "-f", "%{file}", "sans-serif"], text=True).strip()
@@ -17,6 +17,14 @@ def run(*args):
     result = subprocess.run([str(x) for x in args], capture_output=True, text=True)
     if result.returncode:
         raise RuntimeError(result.stderr[-2000:])
+
+
+def compose_layers(background, foreground, output, scale=1):
+    scale = foreground_scale({"foreground_scale": scale})
+    side = max(1, round(432 * scale))
+    run("magick", background, "-resize", "432x432!", "(", foreground,
+        "-resize", f"{side}x{side}!", "-gravity", "center", "-background", "none", "-extent", "432x432",
+        ")", "-compose", "over", "-composite", output)
 
 
 def circle(source, output, adaptive=False, background=None):
@@ -54,8 +62,7 @@ def main():
         if bitmap := bitmap_source(ROOT, target):
             circle(bitmap, clean, background=bitmap_background(target))
         else:
-            run("magick", upstream / "0.png", "-resize", "432x432!", "(", upstream / "1.png",
-                "-resize", "432x432!", ")", "-compose", "over", "-composite", merged)
+            compose_layers(upstream / "0.png", upstream / "1.png", merged, foreground_scale(target))
             circle(merged, clean, adaptive=True)
         selected_ids = {r["id"] for r in target["roots"] + target.get("seed_roots", [])}
         bitmaps = [(r, v) for r in app["roots"] if r["id"] in selected_ids

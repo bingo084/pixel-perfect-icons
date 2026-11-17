@@ -6,7 +6,8 @@
   "com.taobao.idlefish": {
     "roots": ["drawable/appicon_skin_default_badge"],
     "numeric_target": {"id": "@0x7f0807a6", "name": "drawable/idlefish_ic_launcher", "apk": "split_config.xxhdpi.apk"},
-    "scope": "仅普通入口"
+    "scope": "仅普通入口",
+    "foreground_scale": 0.85
   },
   "cmb.pb": {
     "bootstrap_resource": {"id": "@0x7f080058", "name": "drawable/aboutbank_version_cmb_logo"},
@@ -19,5 +20,8 @@
   "com.tencent.mobileqq": {
     "resource_reader": "binary-bitmaps",
     "roots": ["drawable/icon"]
+  },
+  "com.hpbr.bosszhipin": {
+    "foreground_scale": 0.9
   }
 }

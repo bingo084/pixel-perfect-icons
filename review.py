@@ -10,6 +10,7 @@ import zipfile
 
 from cleanicons.arsc import alias_reader
 from cleanicons.bitmap_table import bitmap_resource_table
+from cleanicons.artwork import foreground_scale
 from cleanicons.resources import dump, file_values, resolved_values, resource_table
 
 ROOT = Path(__file__).resolve().parent
@@ -139,6 +140,10 @@ def main():
                 reviewed["artwork"]["adaptive_background"] = background
         if scope := override.get("scope"):
             reviewed["scope"] = scope
+        if "foreground_scale" in override:
+            scale = foreground_scale(dict(reviewed, foreground_scale=override["foreground_scale"]))
+            if scale != 1:
+                reviewed["foreground_scale"] = scale
         result["apps"].append(reviewed)
     (ROOT / "targets.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
     print(f"Selected {len(result['apps'])} apps, {sum(len(a['roots']) for a in result['apps'])} launcher icon resources")

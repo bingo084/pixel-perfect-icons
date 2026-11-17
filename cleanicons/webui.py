@@ -5,8 +5,8 @@ import json
 from pathlib import Path
 import shutil
 
-from preview import FONT, circle, run
-from cleanicons.artwork import bitmap_background, bitmap_source
+from preview import FONT, circle, compose_layers, run
+from cleanicons.artwork import bitmap_background, bitmap_source, foreground_scale
 
 SDK_SHA256 = "35d1da95e89db19398a1e848a98ec20ad72b4d85964033341d57dc2b7d39da36"
 
@@ -52,8 +52,7 @@ def build_webui(root: Path, destination: Path, spec: dict, version: str):
             source = "补全计划"
             upstream = root / ".cache/upstream" / package
             merged = assets / (package + ".layers.png")
-            run("magick", upstream / "0.png", "-resize", "432x432!", "(", upstream / "1.png",
-                "-resize", "432x432!", ")", "-compose", "over", "-composite", merged)
+            compose_layers(upstream / "0.png", upstream / "1.png", merged, foreground_scale(target))
             circle(merged, assets / after, adaptive=True)
             merged.unlink()
         apps.append({"package": package, "name": target["label"], "reason": reasons[package],

@@ -302,7 +302,8 @@
       "mapping_mode": "numeric-idmap-v11",
       "numeric_target_apk": "split_config.xxhdpi.apk",
       "numeric_target_crc": "c7590760",
-      "scope": "仅普通入口"
+      "scope": "仅普通入口",
+      "foreground_scale": 0.85
     },
     {
       "package": "cmb.pb",
@@ -508,7 +509,8 @@
       "assets": {
         "0": "df055a07c33fa3549ef2b8e56a0c4dd778c6b5d7",
         "1": "cee2e98dd278b9f20afcbe9b967b9103f7500200"
-      }
+      },
+      "foreground_scale": 0.9
     },
     {
       "package": "com.midea.ai.appliances",

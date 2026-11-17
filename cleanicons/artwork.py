@@ -5,6 +5,15 @@ from pathlib import Path
 import re
 
 
+def foreground_scale(app):
+    scale = app.get("foreground_scale", 1)
+    if type(scale) not in (int, float) or not 0 < scale <= 1:
+        raise ValueError("Foreground scale must be a number greater than 0 and at most 1")
+    if scale != 1 and app.get("artwork"):
+        raise ValueError("Foreground scaling requires layered upstream artwork")
+    return scale
+
+
 def bitmap_background(app):
     background = app.get("artwork", {}).get("adaptive_background")
     if background is not None and not re.fullmatch(r"#[0-9a-fA-F]{6}", background):

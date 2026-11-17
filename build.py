@@ -15,12 +15,12 @@ import zipfile
 
 from cleanicons.resources import dump, resource_table, xml_tree
 from cleanicons.webui import build_webui
-from cleanicons.artwork import bitmap_background, bitmap_source, bootstrap_source
+from cleanicons.artwork import bitmap_background, bitmap_source, bootstrap_source, foreground_scale
 
 ROOT = Path(__file__).resolve().parent
 ANDROID = "http://schemas.android.com/apk/res/android"
-VERSION = "0.3.10"
-VERSION_CODE = 310
+VERSION = "0.3.11"
+VERSION_CODE = 311
 # Keep the installed identity so renamed releases update the existing module.
 MODULE_ID = "pixel-clean-icons"
 ARCHIVE_NAME = "pixel-perfect-icons"
@@ -60,6 +60,7 @@ def signing_environment():
 
 
 def validate_target(app):
+    foreground_scale(app)
     package = app["package"]
     if not re.fullmatch(r"[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z0-9_]+)+", package):
         raise ValueError("Invalid package: " + package)
@@ -129,6 +130,7 @@ def build_overlay(app, target, tools, framework, key, env):
             ET.SubElement(adaptive, "foreground", {f"{{{ANDROID}}}drawable": "@drawable/clean_foreground_layer"})
     else:
         expected_images = {}
+        scale = foreground_scale(app)
         for number, name in [(0, "background"), (1, "foreground")]:
             path = assets / f"{number}.png"
             expected = app["assets"][str(number)]
@@ -141,6 +143,10 @@ def build_overlay(app, target, tools, framework, key, env):
             expected_images[f"clean_{name}.png"] = content
             wrapper = ET.Element("bitmap", {f"{{{ANDROID}}}src": f"@drawable/clean_{name}",
                                              f"{{{ANDROID}}}gravity": "fill", f"{{{ANDROID}}}filter": "true"})
+            if name == "foreground" and scale != 1:
+                write_xml(target / "res/drawable/clean_foreground_bitmap.xml", wrapper)
+                wrapper = ET.Element("inset", {f"{{{ANDROID}}}drawable": "@drawable/clean_foreground_bitmap",
+                                               f"{{{ANDROID}}}inset": f"{(1 - scale) * 50:.6f}%"})
             write_xml(target / f"res/drawable/clean_{name}_layer.xml", wrapper)
         adaptive = ET.Element("adaptive-icon")
         for name in ("background", "foreground"):
