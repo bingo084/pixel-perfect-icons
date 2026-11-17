@@ -1,0 +1,11 @@
+{
+  "com.xunmeng.pinduoduo": {
+    "roots": ["drawable/logo"],
+    "numeric_target": {"id": "@0x7f0d0009", "name": "mipmap/pdd", "apk": "base.apk"}
+  },
+  "com.taobao.idlefish": {
+    "roots": ["drawable/appicon_skin_default_badge"],
+    "numeric_target": {"id": "@0x7f0807a6", "name": "drawable/idlefish_ic_launcher", "apk": "split_config.xxhdpi.apk"},
+    "scope": "仅普通入口"
+  }
+}

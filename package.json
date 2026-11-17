@@ -1,0 +1,8 @@
+{
+  "name": "pixel-perfect-icons-webui",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/model.test.mjs && node tests/commands.test.mjs"
+  }
+}

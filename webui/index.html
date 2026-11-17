@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: ksu:; connect-src 'self'; object-src 'none'; base-uri 'none'">
+  <title>Pixel Perfect Icons</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="page-header">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">◈</span> Pixel Perfect Icons</div>
+      <div class="title-line"><h1>图标</h1><span id="preview-badge" hidden>界面预览</span></div>
+      <p id="summary" class="summary" aria-live="polite">正在读取应用…</p>
+    </header>
+
+    <section class="controls" aria-label="筛选应用">
+      <div class="search-field">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.6"/><path d="m16 16 4.2 4.2"/></svg>
+        <label class="sr-only" for="search">搜索应用</label>
+        <input id="search" type="search" placeholder="搜索应用" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="tabs" role="tablist" aria-label="图标分类">
+        <button id="tab-replaced" type="button" role="tab" aria-selected="true" aria-controls="app-list" data-filter="replaced">已替换 <span data-count="replaced">—</span></button>
+        <button id="tab-untouched" type="button" role="tab" aria-selected="false" aria-controls="app-list" tabindex="-1" data-filter="untouched">未替换 <span data-count="untouched">—</span></button>
+        <button id="tab-all" type="button" role="tab" aria-selected="false" aria-controls="app-list" tabindex="-1" data-filter="all">全部 <span data-count="all">—</span></button>
+      </div>
+    </section>
+
+    <div id="load-error" class="notice error" role="alert" hidden></div>
+    <div class="list-heading"><span id="list-caption">应用</span><span id="comparison-label">原图 <span aria-hidden="true">→</span> 替换后</span></div>
+    <section id="app-list" class="app-list" role="tabpanel" aria-labelledby="tab-replaced" aria-busy="true"></section>
+    <div id="empty" class="empty" hidden><span aria-hidden="true">⌕</span><p id="empty-message">没有找到应用</p></div>
+    <p id="source-note" class="source-note" hidden>原图为适配时的应用图标</p>
+
+    <footer class="actions">
+      <button id="clear-cache" class="primary-button" type="button" aria-busy="false" disabled>
+        <svg id="cache-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="m15 3 6 6-10.5 10.5a2 2 0 0 1-2.8 0l-3.2-3.2a2 2 0 0 1 0-2.8L15 3Z"/><path d="m10 8 6 6M9 21h12"/></svg>
+        <span class="cache-spinner" aria-hidden="true"></span>
+        <span id="clear-label">清除图标缓存</span>
+      </button>
+      <p id="cache-status" class="cache-status"><span id="cache-message" role="status" aria-live="polite"></span><span id="cache-elapsed" aria-hidden="true" hidden></span></p>
+    </footer>
+  </main>
+
+  <dialog id="reason-dialog">
+    <div class="dialog-top"><h2 id="reason-title"></h2><button id="close-dialog" class="close-button" aria-label="关闭" type="button">×</button></div>
+    <p id="reason-text"></p>
+  </dialog>
+</body>
+</html>

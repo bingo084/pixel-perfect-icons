@@ -1,0 +1,541 @@
+{
+  "upstream": {
+    "repository": "pzcn/Perfect-Icons-Completion-Project",
+    "commit": "fb8b5c9224510fedb653a7dceafdcb364b4e2263"
+  },
+  "device": {
+    "ro.product.device": "komodo",
+    "ro.build.version.sdk": "37",
+    "ro.build.fingerprint": "google/komodo/komodo:17/CP4A.261105.040.A1/16581829:user/release-keys"
+  },
+  "apps": [
+    {
+      "package": "tv.danmaku.bili",
+      "label": "哔哩哔哩",
+      "version_code": "9180300",
+      "version_name": "9.18.0",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f0e0058",
+          "name": "mipmap/ic_launcher",
+          "configs": [
+            "",
+            "anydpi-v26",
+            "hdpi",
+            "mdpi",
+            "xhdpi",
+            "xxhdpi",
+            "xxxhdpi"
+          ]
+        },
+        {
+          "id": "@0x7f0e005b",
+          "name": "mipmap/ic_launcher_round",
+          "configs": [
+            "anydpi-v26",
+            "hdpi",
+            "mdpi",
+            "xhdpi",
+            "xxhdpi",
+            "xxxhdpi"
+          ]
+        }
+      ],
+      "reason": "移除营销装饰",
+      "assets": {
+        "0": "a32b42a4807a92502f92f76fd400fad974f41a53",
+        "1": "48faa38cef26bd89b04df1bbdccb7e55e27661ea"
+      }
+    },
+    {
+      "package": "com.taobao.taobao",
+      "label": "淘宝",
+      "version_code": "817",
+      "version_name": "10.68.0.601",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f0f0014",
+          "name": "mipmap/ic_tb_app",
+          "configs": [
+            "",
+            "anydpi-v26",
+            "xhdpi"
+          ]
+        },
+        {
+          "id": "@0x7f0f0015",
+          "name": "mipmap/ic_tb_app_88vip",
+          "configs": [
+            "",
+            "xhdpi"
+          ]
+        }
+      ],
+      "reason": "移除营销装饰",
+      "assets": {
+        "0": "d8604f1aad043c3026b5c62528915aebf031f4a9",
+        "1": "84b01f2ef914d7fbad0e577ae304ae2ef9d569b9"
+      }
+    },
+    {
+      "package": "com.jingdong.app.mall",
+      "label": "京东",
+      "version_code": "102925",
+      "version_name": "16.1.50",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f030001",
+          "name": "mipmap/jd_buy_icon",
+          "configs": [
+            "anydpi-v26",
+            "hdpi",
+            "xhdpi",
+            "xxhdpi",
+            "xxxhdpi"
+          ]
+        }
+      ],
+      "reason": "移除营销装饰",
+      "assets": {
+        "0": "fece2757d4925e58210caca8c8eda2f936e99682",
+        "1": "0e6669fbcc1b6d8c91577a9d35631d9d447b38cb"
+      }
+    },
+    {
+      "package": "com.pupumall.customer",
+      "label": "朴朴超市",
+      "version_code": "600700",
+      "version_name": "6.7.0",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f0e0000",
+          "name": "mipmap/ic_launcher",
+          "configs": [
+            "hdpi",
+            "xhdpi",
+            "xxhdpi",
+            "xxxhdpi"
+          ]
+        }
+      ],
+      "reason": "移除营销装饰",
+      "assets": {
+        "0": "cffe36fe5b7caed98d11f5b7759f72bbed8522c4",
+        "1": "c2a38e29562887c755937eecc82ff98f4ac6f5b3"
+      }
+    },
+    {
+      "package": "com.zhaopin.social",
+      "label": "智联招聘",
+      "version_code": "8362",
+      "version_name": "8.15.13",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f080ad9",
+          "name": "drawable/ic_launcher",
+          "configs": [
+            "hdpi",
+            "mdpi",
+            "sw720dp-xhdpi",
+            "xhdpi",
+            "xxhdpi",
+            "xxxhdpi"
+          ]
+        }
+      ],
+      "reason": "移除营销装饰",
+      "assets": {
+        "0": "a5ec49b557f95f21e9a8942b211a73c615237306",
+        "1": "2ae08358997903f51849fb87832b904fb7757271"
+      }
+    },
+    {
+      "package": "com.eg.android.AlipayGphone",
+      "label": "支付宝",
+      "version_code": "212363",
+      "version_name": "12.12.36.7600",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f02001c",
+          "name": "drawable/appicon",
+          "configs": [
+            "",
+            "anydpi-v26",
+            "hdpi",
+            "ldpi",
+            "mdpi",
+            "xhdpi",
+            "xxhdpi",
+            "xxxhdpi"
+          ]
+        }
+      ],
+      "reason": "移除营销装饰",
+      "assets": {
+        "0": "bd217eb777eade2d6e2810c1420a7c77db20a86d",
+        "1": "1f665ef694fbdd1d928a811b765c18c20f6a58ba"
+      }
+    },
+    {
+      "package": "com.baidu.netdisk",
+      "label": "百度网盘",
+      "version_code": "3036",
+      "version_name": "12.22.5",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f08175e",
+          "name": "drawable/ic_element_appicon_netdisk",
+          "configs": [
+            "hdpi",
+            "mdpi",
+            "xhdpi",
+            "xxhdpi"
+          ]
+        },
+        {
+          "id": "@0x7f08175f",
+          "name": "drawable/ic_element_appicon_op",
+          "configs": [
+            "hdpi",
+            "mdpi",
+            "xhdpi",
+            "xxhdpi"
+          ]
+        },
+        {
+          "id": "@0x7f081761",
+          "name": "drawable/ic_element_appicon_svip",
+          "configs": [
+            "hdpi",
+            "mdpi",
+            "xhdpi",
+            "xxhdpi"
+          ]
+        }
+      ],
+      "reason": "适配自适应图标",
+      "assets": {
+        "0": "ee24e4f3dd766f0b72984d9ba378cd91f8302ba6",
+        "1": "cec2130b414684d41477f6d4bc3ca1f4a9d91b1a"
+      }
+    },
+    {
+      "package": "com.xunmeng.pinduoduo",
+      "label": "拼多多",
+      "version_code": "82700",
+      "version_name": "8.27.0",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f0d0009",
+          "name": "mipmap/pdd",
+          "configs": [
+            "anydpi-v26",
+            "hdpi",
+            "xhdpi",
+            "xxhdpi",
+            "xxxhdpi"
+          ]
+        }
+      ],
+      "reason": "移除营销装饰",
+      "assets": {
+        "0": "331c99ca1424e6f7aff9365503d76daa9d24b522",
+        "1": "e12e107968ece8b504ef154c1745168c717f9f80"
+      },
+      "seed_roots": [
+        {
+          "id": "@0x7f070570",
+          "name": "drawable/logo",
+          "configs": [
+            ""
+          ]
+        }
+      ],
+      "mapping_mode": "numeric-idmap-v11",
+      "numeric_target_apk": "base.apk",
+      "numeric_target_crc": "32fbffb9",
+      "original_preview": {
+        "apk": "base.apk",
+        "entry": "r/cy.png",
+        "config": "xxxhdpi",
+        "source_resource": "@0x7f070570",
+        "resolved_resource": "@0x7f0d0009"
+      }
+    },
+    {
+      "package": "com.taobao.idlefish",
+      "label": "闲鱼",
+      "version_code": "529",
+      "version_name": "7.28.86.1",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f0807a6",
+          "name": "drawable/idlefish_ic_launcher",
+          "configs": [
+            "xxhdpi"
+          ]
+        }
+      ],
+      "reason": "适配自适应图标",
+      "assets": {
+        "0": "39c2db70bdbd5ee0aa76cda2e57daef10663a17f",
+        "1": "97a1dbde2b9c17d643b63df321c7eed0f65c6616"
+      },
+      "seed_roots": [
+        {
+          "id": "@0x7f08021e",
+          "name": "drawable/appicon_skin_default_badge",
+          "configs": [
+            "xxhdpi"
+          ]
+        }
+      ],
+      "mapping_mode": "numeric-idmap-v11",
+      "numeric_target_apk": "split_config.xxhdpi.apk",
+      "numeric_target_crc": "c7590760",
+      "scope": "仅普通入口"
+    },
+    {
+      "package": "cn.gov.tax.its",
+      "label": "个人所得税",
+      "version_code": "20305",
+      "version_name": "2.3.5",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f0c0005",
+          "name": "mipmap/ic_launcher",
+          "configs": [
+            "hdpi",
+            "ldpi",
+            "mdpi",
+            "xhdpi",
+            "xxhdpi",
+            "xxxhdpi"
+          ]
+        }
+      ],
+      "reason": "适配自适应图标",
+      "assets": {
+        "0": "da621f0018ea9db9da0bbd7131c5fd2b67e9dcb5",
+        "1": "ee56e3a4a1c5e1f89f7e4a42c99e5bdeb9068c15"
+      }
+    },
+    {
+      "package": "com.MobileTicket",
+      "label": "铁路12306",
+      "version_code": "280",
+      "version_name": "5.9.6.8",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f0d0027",
+          "name": "mipmap/ic_launcher",
+          "configs": [
+            "hdpi",
+            "ldpi",
+            "mdpi",
+            "xhdpi",
+            "xxhdpi",
+            "xxxhdpi"
+          ]
+        }
+      ],
+      "reason": "适配自适应图标",
+      "assets": {
+        "0": "af0fc1c1e650c55e189793214b80b4d8402cf14c",
+        "1": "6a93886a95b96a1c772043762fd68507b548a2f9"
+      }
+    },
+    {
+      "package": "com.chinamworld.main",
+      "label": "中国建设银行",
+      "version_code": "2384",
+      "version_name": "9.7.1",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f080a71",
+          "name": "drawable/launcher_icon",
+          "configs": [
+            ""
+          ]
+        }
+      ],
+      "reason": "适配自适应图标",
+      "assets": {
+        "0": "7547c2bc0719ea409775c83e3b8a5f79adffd16c",
+        "1": "0fecfc5b37b5c089c291e44a7ecdbc1c89f4e011"
+      }
+    },
+    {
+      "package": "com.hpbr.bosszhipin",
+      "label": "BOSS直聘",
+      "version_code": "1418010",
+      "version_name": "14.180",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f0e0f09",
+          "name": "mipmap/logo_icon",
+          "configs": [
+            "xxxhdpi"
+          ]
+        },
+        {
+          "id": "@0x7f0e0f0a",
+          "name": "mipmap/logo_icon_round",
+          "configs": [
+            "xxxhdpi"
+          ]
+        }
+      ],
+      "reason": "适配自适应图标",
+      "assets": {
+        "0": "df055a07c33fa3549ef2b8e56a0c4dd778c6b5d7",
+        "1": "cee2e98dd278b9f20afcbe9b967b9103f7500200"
+      }
+    },
+    {
+      "package": "com.midea.ai.appliances",
+      "label": "美的美居",
+      "version_code": "606",
+      "version_name": "11.0.15.6",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f0e0003",
+          "name": "mipmap/app_ic_launcher",
+          "configs": [
+            "hdpi",
+            "mdpi",
+            "xhdpi",
+            "xxhdpi",
+            "xxxhdpi"
+          ]
+        }
+      ],
+      "reason": "适配自适应图标",
+      "assets": {
+        "0": "4cbeb0d39b41acf8b9b5a21330a5e987647dc7ac",
+        "1": "32018d013467b6a7d09fde3163aa2b7526b4f451"
+      }
+    },
+    {
+      "package": "com.xiaomi.router",
+      "label": "Mi WiFi",
+      "version_code": "40302",
+      "version_name": "4.3.2",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f08037a",
+          "name": "drawable/ic_launcher",
+          "configs": [
+            "hdpi",
+            "mdpi",
+            "xhdpi",
+            "xxhdpi"
+          ]
+        }
+      ],
+      "reason": "适配自适应图标",
+      "assets": {
+        "0": "3c747f0b5540167d4cc66eb3aa1d380e61471ec8",
+        "1": "7f3a715e752ff9462deba5db3a5fdc0fabbfbf57"
+      }
+    },
+    {
+      "package": "com.tencent.wemeet.app",
+      "label": "Tencent Meeting",
+      "version_code": "2024061644",
+      "version_name": "3.46.11.421",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f0d0000",
+          "name": "mipmap/ic_logo",
+          "configs": [
+            "xxhdpi"
+          ]
+        },
+        {
+          "id": "@0x7f0d0002",
+          "name": "mipmap/ic_logo_round",
+          "configs": [
+            "xxhdpi"
+          ]
+        }
+      ],
+      "reason": "适配自适应图标",
+      "assets": {
+        "0": "2ca0d6bb55a781c0d954cbe5d63da480fb5352d5",
+        "1": "67b036a5540185767af65eef7c01993f2d5adfbc"
+      }
+    },
+    {
+      "package": "com.wudaokou.hippo",
+      "label": "盒马",
+      "version_code": "374",
+      "version_name": "8.10.2",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f080166",
+          "name": "drawable/app_icon",
+          "configs": [
+            "hdpi",
+            "xhdpi",
+            "xxhdpi"
+          ]
+        }
+      ],
+      "reason": "适配自适应图标",
+      "assets": {
+        "0": "35666f574be7225d1d46147e4812bfc12f10fbe3",
+        "1": "a01f9f69968b4b67181cb95a113f27b0f10cf0c6"
+      }
+    },
+    {
+      "package": "com.xiaomi.smarthome",
+      "label": "Xiaomi Home",
+      "version_code": "110716231",
+      "version_name": "11.7.623",
+      "has_overlayable": false,
+      "roots": [
+        {
+          "id": "@0x7f020314",
+          "name": "drawable/bdg",
+          "configs": [
+            "xhdpi"
+          ]
+        },
+        {
+          "id": "@0x7f02155f",
+          "name": "drawable/mj_ic_launcher",
+          "configs": [
+            "hdpi",
+            "mdpi",
+            "xhdpi",
+            "xxhdpi",
+            "xxxhdpi"
+          ]
+        }
+      ],
+      "reason": "适配自适应图标",
+      "assets": {
+        "0": "ab6ef2535f03042d60306752165fe5770a9fc339",
+        "1": "bf14fb7578e76d1599af992b457ae98b3ce91832"
+      }
+    }
+  ]
+}

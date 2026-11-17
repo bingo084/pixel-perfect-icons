@@ -1,0 +1,10 @@
+.cache/
+build/
+dist/
+keys/
+__pycache__/
+*.pyc
+.codex/
+.agents/
+.env
+.env.*
